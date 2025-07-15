@@ -1,11 +1,7 @@
-module.exports = {
-    authenticateRoutes: {
-      path: [
-        "/api/v1/auth/login",
-        "/api/v1/auth/register",
-        "/api/v1/health",
-      ],
-      method: ["GET", "POST"],
-    },
-  };
-  
+const authenticateRoutes = [
+  { url: "/api/v1/register-user", methods: ["POST"] },
+  { url: "/api/v1/login-user", methods: ["POST"] },
+  { url: "/api/v1/health", methods: ["GET"] }
+];
+
+module.exports = authenticateRoutes

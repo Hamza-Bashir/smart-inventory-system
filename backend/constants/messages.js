@@ -6,6 +6,8 @@ module.exports = {
       UNAUTHORIZED: "You are not authorized to access this resource",
       TOKEN_MISSING: "Authorization token missing",
       TOKEN_INVALID: "Invalid or expired token",
+      ALREADY_REGISTER: "User already register",
+      NOT_FOUND: "User not exist"
     },
   
     USER: {
