@@ -20,4 +20,15 @@ describe('POST /api/v1/register-user', () => {
 
     
   });
+
+  it("should fail if name is missing", async ()=>{
+    const res = await request(app)
+    .post("/api/v1/register-user")
+    .send({
+        email: `test${Date.now()}@example.com`, 
+        password: 'Test@1234'
+    })
+    expect(res.statusCode).toBe(400)
+    expect(res.body.error).toBe("name is required")
+  })
 });
