@@ -7,8 +7,8 @@ const signJwtToken = (payLoad, expiresIn = "1d")=>{
 
 const verifyJwtToken = (token)=>{
     try {
-        const decode = jwt.verify(token, process.env.JWT_KEY)
-        return {decode}
+        const decoded = jwt.verify(token, process.env.JWT_KEY)
+        return {decoded}
     } catch (error) {
         return {error}
     }

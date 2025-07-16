@@ -13,13 +13,13 @@ const authenticate = (req,res,next)=>{
 
     const token = authHeader.split(" ")[1]
 
-    const {decode, err} = verifyJwtToken(token)
+    const {decoded, error} = verifyJwtToken(token)
 
-    if(err){
+    if(error){
         return next(new AppError(messages.AUTH.TOKEN_INVALID, code.UNAUTHORIZED))
     }
 
-    req.user = decode
+    req.user = decoded
     next()
 }
 
