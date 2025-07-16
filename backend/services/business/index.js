@@ -56,4 +56,22 @@ const getAllBusiness = asyncHandler(async (req,res,next) => {
     response(res, 200, true, "Business found successfully", {businesses:allBusiness})
 })
 
-module.exports = {addBusiness, getAllBusiness}
+
+// --------------- search business -----------------
+
+const searchBusiness = asyncHandler(async (req,res,next) => {
+    const userId = req.user.id
+
+    const {name} = req.query
+
+    const existingBusiness = await business.findOne({owner:userId, name:{$regex:name, $options:"i"}}).populate("owner", "name email")
+
+    if(!existingBusiness){
+        return next(new AppError("Bunsiess not exist", 400))
+    }
+
+    response(res, 200, true, "Business found successfully", {business:existingBusiness})
+
+})
+
+module.exports = {addBusiness, getAllBusiness, searchBusiness}
