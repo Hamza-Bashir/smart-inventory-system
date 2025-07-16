@@ -7,7 +7,7 @@ const routes = require("./routes");
 
 
 const authenticate = require("./middlewares/auth.middleware");
-const { authenticateRoutes } = require("./config/unlessRoutes");
+const  authenticateRoutes  = require("./config/unlessRoutes");
 const errorHandler = require("./middlewares/error.middleware");
 const notFound = require("./middlewares/notFound");
 
