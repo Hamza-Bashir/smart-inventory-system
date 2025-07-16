@@ -6,6 +6,7 @@ const code = require("../../constants/httpStatus")
 const message = require("../../constants/messages")
 const response = require("../../utilis/sendResponse")
 const {signJwtToken} = require("../../utilis/jwtToken")
+const auditLog = require("../../models/auditLog/auditLog")
 
 // ------------------ register user.....................
 
@@ -24,6 +25,14 @@ const registerUser = asyncHandler(async (req,res,next) => {
         name,
         email,
         password:hashPassword
+    })
+
+    await auditLog.create({
+        user:newUser._id,
+        action:"New user register",
+        details:{
+            name:newUser.name
+        }
     })
 
     response(res, 200, true, message.AUTH.REGISTER_SUCCESS, newUser)
