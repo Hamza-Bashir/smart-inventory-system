@@ -1,11 +1,9 @@
 const business = require("../../models/business/businessSchema")
 const asyncHandler = require("../../utilis/asyncHandler")
-const bcryptjs = require("bcryptjs")
 const AppError = require("../../utilis/AppError")
 const code = require("../../constants/httpStatus")
 const message = require("../../constants/messages")
 const response = require("../../utilis/sendResponse")
-const {signJwtToken} = require("../../utilis/jwtToken")
 const auditLog = require("../../models/auditLog/auditLog")
 
 
@@ -43,4 +41,19 @@ const addBusiness = asyncHandler(async (req,res,next) => {
     response(res, 200, true, "Business register successfully", {businessname:newBusiness.name})
 })
 
-module.exports = {addBusiness}
+
+// --------------- get all business -----------------
+
+const getAllBusiness = asyncHandler(async (req,res,next) => {
+    const userId = req.user.id
+
+    const allBusiness = await business.find({owner:userId}).select("name")
+
+    if(!allBusiness){
+        return next(new AppError("No Business Exist", 400))
+    }
+
+    response(res, 200, true, "Business found successfully", {businesses:allBusiness})
+})
+
+module.exports = {addBusiness, getAllBusiness}
