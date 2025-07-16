@@ -1,8 +1,13 @@
-const mongoose = require('mongoose');
-require('dotenv').config(); // So .env values are available
+const mongoose = require("mongoose");
+require("dotenv").config();
 
 beforeAll(async () => {
-  await mongoose.connect(process.env.MONGO_URI);
+  try {
+    await mongoose.connect(process.env.MONGO_URI);
+    console.log(" Connected to MongoDB");
+  } catch (error) {
+    console.error(" MongoDB connection error:", error.message);
+  }
 });
 
 afterAll(async () => {
