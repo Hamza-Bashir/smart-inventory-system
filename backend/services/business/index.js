@@ -5,6 +5,7 @@ const code = require("../../constants/httpStatus")
 const message = require("../../constants/messages")
 const response = require("../../utilis/sendResponse")
 const auditLog = require("../../models/auditLog/auditLog")
+const category = require("../../models/category/categorySchema")
 
 
 // --------------- Add new business -----------------
@@ -116,6 +117,8 @@ const deleteBusiness = asyncHandler(async (req,res,next) => {
     }
 
     await business.deleteOne({_id:businessId, owner:userId})
+
+    await category.deleteMany({businessId:businessId})
 
     await auditLog.create({
         user:userId,

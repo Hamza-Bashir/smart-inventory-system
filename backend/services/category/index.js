@@ -42,7 +42,7 @@ const addCategory = asyncHandler(async (req,res,next) => {
 const getAllCategory = asyncHandler(async (req,res,next) => {
     const {businessId} = req.params
 
-    const allCategory = await category.find({businessId:businessId}).select("name")
+    const allCategory = await category.find({businessId:businessId})
 
     if(!allCategory){
         return next(new AppError("No category exist", 400))
