@@ -74,4 +74,60 @@ const searchBusiness = asyncHandler(async (req,res,next) => {
 
 })
 
-module.exports = {addBusiness, getAllBusiness, searchBusiness}
+// --------------- edit business -----------------
+
+const editBusiness = asyncHandler(async (req,res,next) => {
+    const {newName} = req.body
+    const {businessId} = req.params
+    const userId = req.user.id
+    
+    const existingBusiness = await business.findOne({_id:businessId, owner:userId})
+
+    if(!existingBusiness){
+        return next(new AppError("Business not exist", 400))
+    }
+
+    existingBusiness.name = newName
+    await existingBusiness.save()
+
+    await auditLog.create({
+        user:userId,
+        action:"Business name edit",
+        details:{
+            name:req.user.name,
+            newBusinessName:existingBusiness.name
+        }
+    })
+
+    response(res, 200, true, "Business name edit successfully", {newBusinessName:existingBusiness.name})
+     
+})
+
+// --------------- delete business -----------------
+
+const deleteBusiness = asyncHandler(async (req,res,next) => {
+    const userId = req.user.id
+    const {businessId} = req.params
+
+    const existingBusiness = await business.findOne({_id:businessId, owner:userId})
+
+    if(!existingBusiness){
+        return next(new AppError("Business not exist", 400))
+    }
+
+    await business.deleteOne({_id:businessId, owner:userId})
+
+    await auditLog.create({
+        user:userId,
+        action:"Business deleted",
+        details:{
+            name:req.user.name,
+            businessName:existingBusiness.name
+        }
+    })
+
+    response(res, 200, true, "Business deleted successfully", {deletedBusinessName:existingBusiness.name})
+})
+
+
+module.exports = {addBusiness, getAllBusiness, searchBusiness, editBusiness, deleteBusiness}
