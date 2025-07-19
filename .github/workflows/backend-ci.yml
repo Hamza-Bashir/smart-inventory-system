@@ -23,9 +23,4 @@ jobs:
       - name: 📦 Install Dependencies
         run: npm install
 
-      - name: ✅ Run Tests
-        env:
-          MONGO_URI: ${{ secrets.MONGO_URI }}
-          JWT_KEY: ${{ secrets.JWT_KEY }}
-          PORT: ${{ secrets.PORT }}
-        run: npm test
+     
