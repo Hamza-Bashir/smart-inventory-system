@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
+    "test": "cross-env MONGOMS_DOWNLOAD_URL=https://fastdl.mongodb.org jest --runInBand",
     "start": "nodemon server.js"
   },
   "repository": {
@@ -26,13 +26,14 @@
     "express-unless": "^0.5.0",
     "joi": "^17.13.3",
     "jsonwebtoken": "^9.0.2",
-    "mongodb-memory-server": "^10.1.4",
-    "mongoose": "^8.16.2",
     "multer": "^2.0.1",
     "nodemon": "^3.1.10"
   },
   "devDependencies": {
     "jest": "^30.0.4",
+    "mongodb-memory-server": "^10.1.4",
+    "mongodb-memory-server-core": "^10.1.4",
+    "mongoose": "^8.16.4",
     "supertest": "^7.1.3"
   }
 }
