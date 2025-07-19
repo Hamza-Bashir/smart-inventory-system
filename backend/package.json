@@ -32,7 +32,7 @@
   "devDependencies": {
     "cross-env": "^7.0.3",
     "jest": "^30.0.4",
-    "mongodb-memory-server": "^8.12.2",
+    "mongodb-memory-server": "^8.12.1",
     "mongodb-memory-server-core": "^10.1.4",
     "mongoose": "^8.16.4",
     "supertest": "^7.1.3"
