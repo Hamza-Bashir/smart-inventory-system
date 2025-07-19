@@ -6,11 +6,6 @@
     "test": "jest",
     "start": "nodemon server.js"
   },
-  "jest": {
-    "setupFilesAfterEnv": [
-      "<rootDir>/test/setup.js"
-    ]
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Hamza-Bashir/starter-node-template.git"
