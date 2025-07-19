@@ -51,13 +51,15 @@ describe("POST /api/v1/add-business", () => {
         _id:"user_id_123",
         name:"Test user",
         email:"test@gmail.com"
-      })
+      },
+      process.env.JWT_KEY
+    )
 
       const res = await request(app)
       .post("/api/v1/add-business")
       .set("Authorization", `Bearer ${token}`)
       .send({
-        name:category
+        name:123
       })
 
       expect(res.statusCode).toBe(400)
