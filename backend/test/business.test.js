@@ -44,5 +44,24 @@ describe("POST /api/v1/add-business", () => {
       expect(res.statusCode).toBe(400)
       expect(res.body.error).toBe("name is required")
     })
+
+
+    it("should fail if name is not string", async () => {
+      const token = jwt.sign({
+        _id:"user_id_123",
+        name:"Test user",
+        email:"test@gmail.com"
+      })
+
+      const res = await request(app)
+      .post("/api/v1/add-business")
+      .set("Authorization", `Bearer ${token}`)
+      .send({
+        name:category
+      })
+
+      expect(res.statusCode).toBe(400)
+      expect(res.body.error).toBe("name must be string")
+    })
     
 })
