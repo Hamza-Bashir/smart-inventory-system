@@ -1,15 +1,26 @@
-const mongoose = require("mongoose");
-require("dotenv").config();
+import mongoose from 'mongoose';
+import { MongoMemoryServer } from 'mongodb-memory-server';
+
+let mongo;
 
 beforeAll(async () => {
-  try {
-    await mongoose.connect(process.env.MONGO_URI);
-    console.log(" Connected to MongoDB");
-  } catch (error) {
-    console.error(" MongoDB connection error:", error.message);
+  mongo = await MongoMemoryServer.create();
+  const uri = mongo.getUri();
+
+  await mongoose.connect(uri, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
+});
+
+afterEach(async () => {
+  const collections = mongoose.connection.collections;
+  for (let key in collections) {
+    await collections[key].deleteMany({});
   }
 });
 
 afterAll(async () => {
   await mongoose.connection.close();
+  await mongo.stop();
 });

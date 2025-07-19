@@ -15,9 +15,6 @@ const addBusiness = asyncHandler(async (req,res,next) => {
 
     const {name} = req.body
 
-    if(!name){
-        return next(new AppError("Name is missing", 404))
-    }
 
     const existingBusiness = await business.findOne({name:name, owner:userId})
 

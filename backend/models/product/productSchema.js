@@ -11,10 +11,12 @@ const productSchema = new mongoose.Schema({
         type:Number
     },
     businessId:{
-        type:mongoose.Schema.Types.ObjectId
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"business"
     },
     categoryId:{
-        type:mongoose.Schema.Types.ObjectId
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"category"
     }
 }, {
     timestamps:true

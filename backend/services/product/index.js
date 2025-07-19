@@ -28,15 +28,100 @@ const addProduct = asyncHandler(async (req,res,next) => {
 
     await auditLog.create({
         user:req.user.id,
-        action:"New product Id",
+        action:"New product added",
         details:{
             name:req.user.name,
-            productName:newProduct.name
+            productName:newProduct.name,
         }
     })
 
     response(res, 200, true, "New product added successfully", {name:newProduct.name})
 })
 
+// --------------- get all Product ----------------
 
-module.exports = {addProduct}
+const getAllProduct = asyncHandler(async (req,res,next) => {
+    const {businessId, categoryId} = req.body
+
+    const getAllProduct = await product.find({businessId:businessId, categoryId:categoryId}).populate("businessId", "name").populate("categoryId","name")
+
+    if(!getAllProduct){
+        return next(new AppError("No product exist", 400))
+    }
+
+    response(res, 200, true, "Product found successfully", {getAllProduct})
+})
+
+// --------------- search Product ----------------
+
+const searchProduct = asyncHandler(async (req,res,next) => {
+    const {name} = req.query
+
+    const getProduct = await product.find({name:{$regex:name, $options:"i"}})
+
+    if(!getProduct){
+        return next(new AppError("Product not found", 400))
+    }
+
+    response(res, 200, true, "Product search successfully", {getProduct})
+})
+
+// --------------- edit Product ----------------
+
+const editProduct = asyncHandler(async (req,res,next) => {
+
+    const {productId} = req.params
+    const {name, description, quantity} = req.body
+
+    const existingProduct = await product.findOne({_id:productId})
+
+    if(!existingProduct){
+        return next(new AppError("Product not found", 400))
+    }
+
+    if(name) existingProduct.name = name
+    if(description) existingProduct.description = description
+    if(quantity) existingProduct.quantity = quantity
+
+    existingProduct.save()
+
+    await auditLog.create({
+        user:req.user.id,
+        action:"Edit Product",
+        details:{
+            productName:existingProduct.name
+        }
+    })
+
+    response(res, 200, true, "Product update successfully")
+
+    
+})
+
+// --------------- delete Product ----------------
+
+const deleteProduct = asyncHandler(async (req,res,next) => {
+    const {productId} = req.params
+
+    const existingProduct = await product.findOne({_id:productId})
+
+    if(!existingProduct){
+        return next(new AppError("Product not exist"))
+    }
+
+    await product.deleteOne({_id:productId})
+
+    await auditLog.create({
+        user:req.user.id,
+        action:"Edit Product",
+        details:{
+            productName:existingProduct.name
+        }
+    })
+
+    response(res, 200, true, "Product delete successfully")
+})
+
+
+
+module.exports = {addProduct, getAllProduct, searchProduct, editProduct, deleteProduct}
