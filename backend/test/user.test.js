@@ -82,8 +82,8 @@ describe("POST /api/v1/login-user", () => {
     const res = await request(app)
     .post("/api/v1/login-user")
     .send({
-      email:"maryam@gmail.com",
-      password:"12345"
+      email:`test${Date.now()}@example.com`,
+      password:"Test@1234"
     })
 
     expect(res.statusCode).toBe(200)
