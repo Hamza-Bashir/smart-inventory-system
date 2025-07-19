@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "cross-env MONGOMS_DOWNLOAD_URL=https://fastdl.mongodb.org jest --runInBand",
+    "test": "cross-env MONGOMS_VERSION=6.0.6 jest --runInBand",
     "start": "nodemon server.js"
   },
   "repository": {
@@ -32,7 +32,7 @@
   "devDependencies": {
     "cross-env": "^7.0.3",
     "jest": "^30.0.4",
-    "mongodb-memory-server": "^10.1.4",
+    "mongodb-memory-server": "^8.12.2",
     "mongodb-memory-server-core": "^10.1.4",
     "mongoose": "^8.16.4",
     "supertest": "^7.1.3"
