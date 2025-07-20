@@ -42,6 +42,10 @@ const addCategory = asyncHandler(async (req,res,next) => {
 const getAllCategory = asyncHandler(async (req,res,next) => {
     const {businessId} = req.params
 
+    if(!businessId){
+        return next(new AppError("businessId is required"))
+    }
+
     const allCategory = await category.find({businessId:businessId})
 
     if(!allCategory){
