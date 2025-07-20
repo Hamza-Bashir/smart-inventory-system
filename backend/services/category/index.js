@@ -1,4 +1,5 @@
 const category = require("../../models/category/categorySchema")
+const product = requied("../../models/product/productSchema")
 const asyncHandler = require("../../utilis/asyncHandler")
 const AppError = require("../../utilis/AppError")
 const code = require("../../constants/httpStatus")
@@ -110,6 +111,8 @@ const deleteCategory = asyncHandler(async (req,res,next) => {
     }
 
     const deleteCategory = await category.deleteOne({_id:categoryId})
+
+    await product.deleteMany({categoryId:categoryId})
 
     await auditLog.create({
         user:req.user.id,
