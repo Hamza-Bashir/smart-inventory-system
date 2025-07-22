@@ -1,5 +1,5 @@
 const category = require("../../models/category/categorySchema")
-const product = requied("../../models/product/productSchema")
+const product = require("../../models/product/productSchema")
 const asyncHandler = require("../../utilis/asyncHandler")
 const AppError = require("../../utilis/AppError")
 const code = require("../../constants/httpStatus")
