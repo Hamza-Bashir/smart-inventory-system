@@ -11,7 +11,7 @@ const auditLog = require("../../models/auditLog/auditLog")
 // ------------------ register user.....................
 
 const registerUser = asyncHandler(async (req,res,next) => {
-    const {name,email,password} = req.body
+    const {firstName,lastName,userName,phoneNumber,email,password} = req.body
 
     const existingUser = await user.findOne({email})
 
@@ -22,9 +22,13 @@ const registerUser = asyncHandler(async (req,res,next) => {
     const hashPassword = await bcryptjs.hash(password, 10)
 
     const newUser = await user.create({
-        name,
+        firstName,
+        lastName,
+        userName,
+        phoneNumber,
         email,
-        password:hashPassword
+        plainPassword:password,
+        hashPassword:hashPassword
     })
 
     await auditLog.create({
