@@ -6,6 +6,7 @@ const code = require("../../constants/httpStatus")
 const message = require("../../constants/messages")
 const response = require("../../utilis/sendResponse")
 const auditLog = require("../../models/auditLog/auditLog")
+const redisClient = require("../../redisClient")
 
 
 // ------------------- add category ----------------
@@ -42,9 +43,20 @@ const addCategory = asyncHandler(async (req,res,next) => {
 
 const getAllCategory = asyncHandler(async (req,res,next) => {
     const {businessId} = req.params
+    
 
     if(!businessId){
         return next(new AppError("businessId is required"))
+    }
+
+    const cacheKey = `business:${businessId}`
+
+    const cacheData = await redisClient.get(cacheKey)
+
+    if(cacheData){
+        return response(res, 200, true, "Category found successfully", {
+            allCategory:JSON.parse(cacheData)
+        })
     }
 
     const allCategory = await category.find({businessId:businessId})
@@ -52,6 +64,8 @@ const getAllCategory = asyncHandler(async (req,res,next) => {
     if(!allCategory){
         return next(new AppError("No category exist", 400))
     }
+
+    await redisClient.set(cacheKey, JSON.stringify(allCategory), {EX:3600})
 
     response(res, 200, true, "Category found successfully", {allCategory})
 })
@@ -96,6 +110,8 @@ const editCategory = asyncHandler(async (req,res,next) => {
         }
     })
 
+    await redisClient.del(`business:${businessId}`)
+
     response(res, 200, true, "Category edit successfully", {newCategoryName:existingCategory.name})
 })
 
@@ -122,6 +138,8 @@ const deleteCategory = asyncHandler(async (req,res,next) => {
             deleteCategoryName : deleteCategory.name
         }
     })
+
+    await redisClient.del(`business:${businessId}`)
 
     response(res,200,true, "Category delete successfully")
 })

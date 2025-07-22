@@ -6,6 +6,7 @@ const message = require("../../constants/messages")
 const response = require("../../utilis/sendResponse")
 const auditLog = require("../../models/auditLog/auditLog")
 const category = require("../../models/category/categorySchema")
+const redisClient = require("../../redisClient")
 
 
 // --------------- Add new business -----------------
@@ -44,12 +45,23 @@ const addBusiness = asyncHandler(async (req,res,next) => {
 
 const getAllBusiness = asyncHandler(async (req,res,next) => {
     const userId = req.user.id
+    const cacheKey = `user:${userId}:businesses`
+
+    const cacheData = await redisClient.get(cacheKey)
+
+    if(cacheData){
+        return response(res, 200, true, "Business found successfully", {
+            businesses:JSON.parse(cacheData)
+        })
+    }
 
     const allBusiness = await business.find({owner:userId}).select("name")
 
     if(!allBusiness){
         return next(new AppError("No Business Exist", 400))
     }
+
+    await redisClient.set(cacheKey, JSON.stringify(allBusiness), {EX:3600})
 
     response(res, 200, true, "Business found successfully", {businesses:allBusiness})
 })
@@ -88,6 +100,8 @@ const editBusiness = asyncHandler(async (req,res,next) => {
     existingBusiness.name = newName
     await existingBusiness.save()
 
+    await redisClient.del(`user:${userId}:businesses`)
+
     await auditLog.create({
         user:userId,
         action:"Business name edit",
@@ -116,6 +130,8 @@ const deleteBusiness = asyncHandler(async (req,res,next) => {
     await business.deleteOne({_id:businessId, owner:userId})
 
     await category.deleteMany({businessId:businessId})
+
+    await redisClient.del(`user:${userId}:businesses`)
 
     await auditLog.create({
         user:userId,
